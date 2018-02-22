@@ -13,6 +13,7 @@ RUN apk --no-cache --update add busybox-suid bash curl unzip sudo openssh-client
  && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security \
  && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security \
  && wget -O /home/appuser/kafka.jar https://github.com/daggerok/embedded-kafka/raw/mvn-repo/daggerok/embedded-kafka/0.0.1/embedded-kafka-0.0.1.jar \
+ && chown -R appuser:wheel /home/appuser/kafka.jar \
  && apk del busybox-suid unzip openssh-client shadow wget \
  && rm -rf /var/cache/apk/* /tmp/*
 USER appuser
