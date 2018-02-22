@@ -13,6 +13,7 @@ RUN apk --no-cache --update add busybox-suid bash curl unzip sudo openssh-client
  && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security \
  && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security \
  && wget -O /home/appuser/kafka.jar https://github.com/daggerok/embedded-kafka/raw/mvn-repo/daggerok/embedded-kafka/0.0.1/embedded-kafka-0.0.1.jar \
+ && wget -O /home/appuser/kafka.jar wget -O kafka.jar https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/daggerok/embedded-kafka/0.0.2/embedded-kafka-0.0.2.jar
  && chown -R appuser:wheel /home/appuser/kafka.jar \
  && apk del busybox-suid unzip openssh-client shadow wget \
  && rm -rf /var/cache/apk/* /tmp/*
@@ -20,8 +21,12 @@ USER appuser
 WORKDIR /home/appuser
 VOLUME /home/appuser
 CMD /bin/bash
+KAFKA_TOPICS_ARG="\
+topic1,topic2,topic3"
+ENV KAFKA_TOPICS="${KAFKA_TOPICS_ARG}"
 ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                 -XX:+UnlockExperimentalVMOptions \
                 -XX:+UseCGroupMemoryLimitForHeap \
                 -XshowSettings:vm \
-                -jar /home/appuser/kafka.jar
+                -jar /home/appuser/kafka.jar ${KAFKA_TOPICS}
+
