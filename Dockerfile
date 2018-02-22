@@ -12,7 +12,8 @@ RUN apk --no-cache --update add busybox-suid bash curl unzip sudo openssh-client
  && unzip -o /tmp/jce_policy-8.zip -d /tmp \
  && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security \
  && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security \
- && wget -O /tmp/kafka.jar https://github.com/daggerok/embedded-kafka/raw/mvn-repo/daggerok/embedded-kafka/0.0.1/embedded-kafka-0.0.1.jar \
+ && wget -O /home/appuser/kafka.jar https://github.com/daggerok/embedded-kafka/raw/mvn-repo/daggerok/embedded-kafka/0.0.1/embedded-kafka-0.0.1.jar \
+ && chown -R appuser:wheel /home/appuser/kafka.jar \
  && apk del busybox-suid unzip openssh-client shadow wget \
  && rm -rf /var/cache/apk/* /tmp/*
 USER appuser
@@ -29,7 +30,7 @@ ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                 -XX:+UnlockExperimentalVMOptions \
                 -XX:+UseCGroupMemoryLimitForHeap \
                 -XshowSettings:vm \
-                -jar /tmp/kafka.jar
+                -jar /home/appuser/kafka.jar
 CMD /bin/bash
 # EXPOSE 2181 9092
 # HEALTHCHECK --timeout=1s \
