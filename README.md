@@ -10,5 +10,5 @@ Docker image of simple java app with embedded kafka
 
 ```
 
-FROM daggerok/kafka:v2
+FROM daggerok/kafka:v3
 ```
