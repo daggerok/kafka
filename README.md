@@ -12,7 +12,7 @@
 
 ```dockerfile
 
-FROM daggerok/kafka:v6
+FROM daggerok/kafka:v7
 ENV KAFKA_TOPICS="firstTopc,secondTopic"
 
 ```
@@ -24,7 +24,7 @@ ENV KAFKA_TOPICS="firstTopc,secondTopic"
 version: "2.1"
 services:
   kafka:
-    image: daggerok/kafka:v6
+    image: daggerok/kafka:v7
     environment:
       KAFKA_TOPICS: 'firstTopic,secondTopic'
     ports:
