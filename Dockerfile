@@ -27,7 +27,7 @@ ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                 -XX:+UnlockExperimentalVMOptions \
                 -XX:+UseCGroupMemoryLimitForHeap \
                 -XshowSettings:vm \
-                -jar /home/appuser/kafka.jar ${KAFKA_TOPICS}
+                -jar /home/appuser/kafka.jar --topics="${KAFKA_TOPICS}"
 HEALTHCHECK --timeout=2s \
             --retries=22 \
             CMD curl -f http://127.0.0.1:8080/actuator/health || exit 1
