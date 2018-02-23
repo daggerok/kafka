@@ -5,6 +5,7 @@ Docker image of simple java app with embedded kafka
 
 - 2181 - zookeeper
 - 9092 - broker
+- 8080 - spring webflux health endpoint
 
 ### Usage:
 
@@ -12,7 +13,7 @@ Docker image of simple java app with embedded kafka
 
 ```dockerfile
 
-FROM daggerok/kafka:v4
+FROM daggerok/kafka:v5
 ENV KAFKA_TOPICS="firstTopc,secondTopic"
 
 ```
@@ -26,7 +27,7 @@ version: "2.1"
 services:
 
   kafka:
-    image: daggerok/kafka
+    image: daggerok/kafka:v5
     environment:
       KAFKA_TOPICS: 'firstTopic,secondTopic'
     ports:
