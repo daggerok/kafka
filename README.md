@@ -1,5 +1,5 @@
 # kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=master)](https://travis-ci.org/daggerok/kafka)
-Docker image of simple java app with embedded kafka
+[Docker image](https://hub.docker.com/r/daggerok/kafka/) of simple java app with embedded kafka
 
 **Exposed ports**:
 
