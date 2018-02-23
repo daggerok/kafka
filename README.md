@@ -14,6 +14,7 @@ Docker image of simple java app with embedded kafka
 
 FROM daggerok/kafka:v4
 KAFKA_TOPICS="firstTopc,secondTopic"
+
 ```
 
 #### docker-compose.yml
@@ -43,4 +44,5 @@ volumes:
 networks:
   backing-services:
     driver: bridge
+
 ```
