@@ -10,7 +10,7 @@ Docker image of simple java app with embedded kafka
 
 #### Dockerfile
 
-```docker
+```dockerfile
 
 FROM daggerok/kafka:v4
 KAFKA_TOPICS="firstTopc,secondTopic"
