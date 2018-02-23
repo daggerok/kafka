@@ -28,12 +28,11 @@ services:
   kafka:
     image: daggerok/kafka
     environment:
-      KAFKA_TOPICS: 'top1,top2,top3'
+      KAFKA_TOPICS: 'firstTopic,secondTopic'
     ports:
     - "2181:2181"
     - "9092:9092"
     volumes:
-    - "kafka-data:/home/appuser"
     - "kafka-data:/var"
     - "kafka-data:/tmp"
     networks: [backing-services]
