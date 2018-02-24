@@ -49,14 +49,12 @@ HEALTHCHECK --timeout=2s \
             --retries=22 \
             CMD curl -f "http://127.0.0.1:${HTTP_PORT}${HTTP_CONTEXT}" || exit 1
 
-########## you can use next docker-compose: ###########
+### you can use next docker-compose ###
 #
 # version: "2.1"
 # services:
-#   gradle-embedded-kafka-app:
-#     build:
-#       context: .
-#       dockerfile: gradle/Dockerfile
+#   kafka-app:
+#     image: daggerok/kafka:v9
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       ZOOKEEPER_DIR: ./zk
@@ -64,13 +62,13 @@ HEALTHCHECK --timeout=2s \
 #       KAFKA_TOPICS: topic1,topic2
 #       HTTP_PORT: 8080
 #       HTTP_CONTEXT: /
-#     volumes: ["gradle-embedded-kafka-app-data:/home"]
+#     volumes: ["kafka-app-data:/home"]
 #     ports: ["8080:8080"]
 #     networks: [backing-services]
 # volumes:
-#   gradle-embedded-kafka-app-data: {}
+#   kafka-app-data: {}
 # networks:
 #   backing-services:
 #     driver: bridge
 #
-#######################################################
+#######################################
