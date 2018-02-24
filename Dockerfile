@@ -44,7 +44,7 @@ ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                         --kafkaTopics="${KAFKA_TOPICS}" \
                         --httpPort="${HTTP_PORT}" \
                         --httpContext="${HTTP_CONTEXT}"
-EXPOSE 2181 9092 8080
+EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 HEALTHCHECK --timeout=2s \
             --retries=22 \
             CMD curl -f "http://127.0.0.1:${HTTP_PORT}${HTTP_CONTEXT}" || exit 1
