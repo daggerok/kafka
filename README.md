@@ -41,7 +41,6 @@ services:
     ports:
     - "2181:2181"
     - "9092:9092"
-    - "8080:8080"
     volumes:
     - "kafka-data:/home"
     networks: [backing-services]
