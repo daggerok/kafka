@@ -13,7 +13,7 @@
 
 ```dockerfile
 
-FROM daggerok/kafka:v8
+FROM daggerok/kafka:v9
 ENV ZOOKEEPER_PORT=2181 \
     ZOOKEEPER_DIR=/home/appuser \
     KAFKA_PORT=9092 \
@@ -30,7 +30,7 @@ ENV ZOOKEEPER_PORT=2181 \
 version: "2.1"
 services:
   kafka:
-    image: daggerok/kafka:v8
+    image: daggerok/kafka:v9
     environment:
       ZOOKEEPER_PORT: 2181
       ZOOKEEPER_DIR: /home/appuser
