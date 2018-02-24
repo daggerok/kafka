@@ -3,8 +3,9 @@
 
 **Exposed ports**:
 
+- 2128 - zookeeper
 - 9092 - kafka broker
-- 8080 - spring webflux health endpoint
+- 8080 - http health endpoint
 
 ### Usage:
 
@@ -12,8 +13,13 @@
 
 ```dockerfile
 
-FROM daggerok/kafka:v7
-ENV KAFKA_TOPICS="firstTopc,secondTopic"
+FROM daggerok/kafka:v8
+ENV ZOOKEEPER_PORT=2181 \
+    ZOOKEEPER_DIR=/home/appuser \
+    KAFKA_PORT=9092 \
+    KAFKA_TOPICS="topic1,topic2,topic3" \
+    HTTP_PORT=8080 \
+    HTTP_CONTEXT=/
 
 ```
 
@@ -24,15 +30,20 @@ ENV KAFKA_TOPICS="firstTopc,secondTopic"
 version: "2.1"
 services:
   kafka:
-    image: daggerok/kafka:v7
+    image: daggerok/kafka:v8
     environment:
-      KAFKA_TOPICS: 'firstTopic,secondTopic'
+      ZOOKEEPER_PORT: 2181
+      ZOOKEEPER_DIR: /home/appuser
+      KAFKA_PORT: 9092
+      KAFKA_TOPICS: topic1,topic2,topic3
+      HTTP_PORT: 8080
+      HTP_CONTEXT: /
     ports:
     - "2181:2181"
     - "9092:9092"
+    - "8080:8080"
     volumes:
-    - "kafka-data:/var"
-    - "kafka-data:/tmp"
+    - "kafka-data:/home"
     networks: [backing-services]
 volumes:
   kafka-data: {}
