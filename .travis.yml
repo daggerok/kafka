@@ -1,5 +1,3 @@
-group: travis_lts
-sudo: required
 services:
 - docker
 env:
@@ -7,6 +5,7 @@ env:
   - TERM=dumb
   - DOCKER_USERNAME=daggerok
   - secure: tUR1VxYWblQVD6IznC1Z5B+kG8y4nneBSoG4Lcqe+h5oRYOmyyvN/6cQMmCMBMWTHbKdbkf05YMZVHqzGZsbNdmDiJ2zHfSaBgqIqqvOm1wSjvPd4gEV0qUz2lRTDyNSvEb+SGuw8tGIHtd1NB2H44qbCECzPiXqz1ExfTphd6eLLUkAr4A0YT1fe0G2XZDHONj9lNMV2EYyRXnCXjoXAN4+/VmU/ffBx1TZJKfC6GR2JfM0hjr9MuecO7sZnPiPQBXItrHOaSEwdQPSR7Y6LLQNHPkb07/H+UAOy+atgAR4B24+v5z/oPH5dtvZtbPCI9CTpIBbULqaGuERfW/8leMokJllle0SRSz+LDdq20fa8xo0TgoQ5fnALfVR7isUpfkwBqQHo6m3SPNuBB7IqQPqRQCZY5oyK50mYIzLH9DKa3+awYwSQFY0rOKOXLuwM6khgT60OFFI3mgiZleg9bzlfDnKH5wNTge68p5Dw6oQ9JOoOiLcyjSjSCPYfWHTgm5tylb3Mjx/eunj63MEh+4llnqWsGBP9u1Pccr6PDby90auK7uPbjftLjyG8cowHRxlhRu3Yyhc8gmrqjzuUVQXYXp3FyPvafUp+wzPcjSYGtlfRpebJ9pCsSBX9AtHj07Wu53Cx/Kq0MFCyWg86evZ+YOuVvFvuiRs53lzDD0=
+install: true
 script:
 - docker build -t ${DOCKER_USERNAME}/kafka .
 - |
