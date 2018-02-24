@@ -37,7 +37,7 @@ services:
       KAFKA_PORT: 9092
       KAFKA_TOPICS: topic1,topic2,topic3
       HTTP_PORT: 8080
-      HTP_CONTEXT: /
+      HTTP_CONTEXT: /
     ports:
     - "2181:2181"
     - "9092:9092"
