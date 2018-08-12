@@ -6,6 +6,14 @@
 - spring-boot / CLI verstion: 2.0.4.RELEASE
 - kafka version: 1.0.2
 
+**Available tags**:
+
+- [`daggerok/kafka:spring-cloud-cli (latest)`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-openjdk8`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
+- [`v10`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
+- [`v9`](https://github.com/daggerok/kafka/blob/v9/Dockerfile)
+- `...`
+
 **Exposed ports**:
 
 - 2128 - zookeeper
@@ -17,7 +25,9 @@
 #### docker
 
 ```bash
+
 docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
+
 ```
 
 #### Dockerfile
@@ -27,6 +37,13 @@ docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
 FROM daggerok/kafka:spring-cloud-cli
 ENV ZOOKEEPER_PORT=2181 \
     KAFKA_PORT=9092
+
+```
+
+```bash
+
+docker build --no-cache -t my-kafka .
+docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 my-kafka
 
 ```
 
@@ -52,6 +69,33 @@ volumes:
 networks:
   backing-services:
     driver: bridge
+
+```
+
+```bash
+
+docker-compose up
+# ...
+docker-compose down -v
+
+```
+
+#### openjdk8 (no jce policy)
+
+```bash
+
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8
+
+```
+
+or:
+
+```bash
+
+git clone https://github.com/daggerok/kafka
+cd kafka/
+docker build --no-cache -f Dockerfile.openjdk8 -t my-kafka .
+docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 ```
 

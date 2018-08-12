@@ -2,15 +2,19 @@
 
 FROM ubuntu:18.04
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
-
-ARG ZOOKEEPER_PORT_ARG="2181"
-ARG KAFKA_PORT_ARG="9092"
-
-ENV ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
-    KAFKA_PORT="${KAFKA_PORT_ARG}"
-
-# OracleJDK 8:
+ARG ZOOKEEPER_PORT_ARG='2181'
+ARG KAFKA_PORT_ARG='9092'
+ARG JAVA_OPTS_ARG='\
+-Djava.net.preferIPv4Stack=true \
+-XX:+UnlockExperimentalVMOptions \
+-XX:+UseCGroupMemoryLimitForHeap \
+-XshowSettings:vm '
+ENV JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPTS_ARG}" \
+    ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
+    KAFKA_PORT="${KAFKA_PORT_ARG}" \
+    HTTP_PORT='9091'
 RUN apt-get update  -yqq \
+ && apt-get clean   -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
                     curl unzip zip lsof bash psmisc wget software-properties-common \
  && apt-add-repository -y ppa:webupd8team/java \
@@ -18,13 +22,10 @@ RUN apt-get update  -yqq \
  && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
  && echo debconf shared/accepted-oracle-license-v1-1   seen true | debconf-set-selections \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    oracle-java8-installer oracle-java8-set-default oracle-java8-unlimited-jce-policy
-# OpenJDK 8:
-#RUN apt-get update -yqq \
-# && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-#                    openjdk-8-jdk curl unzip zip lsof bash psmisc
-
-RUN curl -s "https://get.sdkman.io" | bash \
+                    oracle-java8-installer oracle-java8-set-default oracle-java8-unlimited-jce-policy \
+ && curl -s "https://get.sdkman.io" | bash \
+ && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
+               && sdk selfupdate' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
                && sdk install springboot 2.0.4.RELEASE' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
@@ -33,12 +34,9 @@ RUN curl -s "https://get.sdkman.io" | bash \
                && (spring cloud kafka &)' \
  && /bin/bash -c 'echo "waiting for dependencies resolution on initial kafka bootstrap..." && sleep 150' \
  && /bin/bash -c 'echo "shutdown kafka..." && (killall -9 java || true)'
-
-EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT}
-
+EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["source $HOME/.sdkman/bin/sdkman-init.sh && spring cloud kafka"]
-
 HEALTHCHECK \
   --timeout=1s \
   --retries=33 \
