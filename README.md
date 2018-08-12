@@ -72,7 +72,7 @@ docker-compose down -v
 
 ```
 
-#### openjdk8 + jce policy
+#### openjdk8 (no jce policy)
 
 ```bash
 

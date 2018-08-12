@@ -1,5 +1,5 @@
-# docker build --no-cache -f Dockerfile.openjdk8 -t my-kafka .
-# docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 my-kafka
+# docker build -f Dockerfile.oraclejdk -t my-kafka .
+# docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 FROM ubuntu:18.04
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
@@ -13,16 +13,19 @@ ARG JAVA_OPTS_ARG='\
 ENV JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPTS_ARG}" \
     ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
-    HTTP_PORT="9091"
-RUN apt-get update -yqq \
+    HTTP_PORT='9091'
+RUN apt-get update  -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    openjdk-8-jdk curl unzip zip lsof bash psmisc \
+                    curl unzip zip lsof bash psmisc wget software-properties-common \
  && apt-add-repository -y ppa:webupd8team/java \
  && apt-get update  -yqq \
  && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
  && echo debconf shared/accepted-oracle-license-v1-1   seen true | debconf-set-selections \
- && apt-get install -yqq --fix-missing --no-install-recommends --autoremove oracle-java8-unlimited-jce-policy \
+ && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
+                    oracle-java8-installer oracle-java8-set-default oracle-java8-unlimited-jce-policy \
  && curl -s "https://get.sdkman.io" | bash \
+ && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
+               && sdk selfupdate' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
                && sdk install springboot 2.0.4.RELEASE' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
