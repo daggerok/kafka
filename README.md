@@ -5,7 +5,7 @@
 
 - 2128 - zookeeper
 - 9092 - kafka broker
-- 9091 - http health endpoint (optional)
+- 9091 - http actuator endpoints
 
 ### Usage:
 
@@ -15,8 +15,7 @@
 
 FROM daggerok/kafka:spring-cloud-cli
 ENV ZOOKEEPER_PORT=2181 \
-    KAFKA_PORT=9092 \
-    HTTP_PORT=8080
+    KAFKA_PORT=9092
 
 ```
 
@@ -31,11 +30,9 @@ services:
     environment:
       ZOOKEEPER_PORT: 2181
       KAFKA_PORT: 9092
-      HTTP_PORT: 9091
     ports:
     - '2181:2181'
     - '9092:9092'
-    - '9091:9091'
     volumes:
     - 'kafka-data:/root'
     networks: [backing-services]
