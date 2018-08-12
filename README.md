@@ -16,6 +16,12 @@
 
 #### Dockerfile
 
+```bash
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
+```
+
+#### Dockerfile
+
 ```dockerfile
 
 FROM daggerok/kafka:spring-cloud-cli
