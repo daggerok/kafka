@@ -1,6 +1,11 @@
 # kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=master)](https://travis-ci.org/daggerok/kafka)
 [Docker image](https://hub.docker.com/r/daggerok/kafka/) running `spring cloud kafka`
 
+- ubuntu 18.04 (boinic)
+- java version: oraclejdk8 + jce policy
+- spring-boot / CLI verstion: 2.0.4.RELEASE
+- kafka version: 1.0.2
+
 **Exposed ports**:
 
 - 2128 - zookeeper
