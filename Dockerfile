@@ -1,25 +1,7 @@
-FROM openjdk:8u151-jre-alpine3.7
-MAINTAINER Maksim Kostromin https://github.com/daggerok
-RUN apk --no-cache --update add busybox-suid bash curl unzip sudo openssh-client shadow wget \
- && adduser -h /home/appuser -s /bin/bash -D -u 1025 appuser wheel \
- && echo "appuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
- && sed -i "s/.*requiretty$/Defaults !requiretty/" /etc/sudoers \
- && wget --no-cookies \
-         --no-check-certificate \
-         --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-                  "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" \
-         -O /tmp/jce_policy-8.zip \
- && unzip -o /tmp/jce_policy-8.zip -d /tmp \
- && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security \
- && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security \
- && wget -O /home/appuser/kafka.jar https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/embedded-kafka-0.0.3-all.jar \
- && chown -R appuser:wheel /home/appuser/kafka.jar \
- && apk del busybox-suid unzip openssh-client shadow wget \
- && rm -rf /var/cache/apk/* /tmp/*
-USER appuser
-WORKDIR /home/appuser
-VOLUME /home/appuser
-CMD /bin/bash
+# docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:v10
+
+FROM openjdk:8u171-jdk-alpine3.8
+LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG ZOOKEEPER_PORT_ARG="2181"
 ARG ZOOKEEPER_DIR_ARG=/home/appuser
 ARG KAFKA_PORT_ARG="9092"
@@ -27,12 +9,38 @@ ARG KAFKA_TOPICS_ARG="\
 topic1,topic2,topic3"
 ARG HTTP_PORT_ARG="8080"
 ARG HTTP_CONTEXT_ARG="/"
-ENV ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
+ARG JAVA_OPTS_ARG='\
+-Djava.net.preferIPv4Stack=true \
+-XX:+UnlockExperimentalVMOptions \
+-XX:+UseCGroupMemoryLimitForHeap \
+-XshowSettings:vm '
+ENV JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPTS_ARG}" \
+    ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
     ZOOKEEPER_DIR="${ZOOKEEPER_DIR_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
     KAFKA_TOPICS="${KAFKA_TOPICS_ARG}" \
     HTTP_PORT="${HTTP_PORT_ARG}" \
     HTTP_CONTEXT="${HTTP_CONTEXT_ARG}"
+RUN apk add --no-cache --update busybox-suid bash curl unzip sudo openssh-client shadow wget \
+ && adduser -h /home/appuser -s /bin/bash -D -u 1025 appuser wheel \
+ && echo "appuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
+ && sed -i "s/.*requiretty$/Defaults !requiretty/" /etc/sudoers
+RUN wget --no-cookies \
+         --no-check-certificate \
+         --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+                  "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" \
+         -O /tmp/jce_policy-8.zip \
+ && unzip -o /tmp/jce_policy-8.zip -d /tmp \
+ && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security || echo "nothing to backup" \
+ && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security
+RUN wget -O /home/appuser/kafka.jar https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/embedded-kafka-0.0.3-all.jar \
+ && chown -R appuser:wheel /home/appuser/kafka.jar \
+ && apk del busybox-suid unzip openssh-client shadow wget \
+ && rm -rf /var/cache/apk/* /tmp/*
+USER appuser
+WORKDIR /home/appuser
+VOLUME /home/appuser
+CMD /bin/bash
 ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                 -XX:+UnlockExperimentalVMOptions \
                 -XX:+UseCGroupMemoryLimitForHeap \
@@ -54,7 +62,7 @@ HEALTHCHECK --timeout=2s \
 # version: "2.1"
 # services:
 #   kafka-app:
-#     image: daggerok/kafka:v9
+#     image: daggerok/kafka:v10
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       ZOOKEEPER_DIR: ./zk
