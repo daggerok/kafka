@@ -72,6 +72,25 @@ docker-compose down -v
 
 ```
 
+#### openjdk8 + jce policy
+
+```bash
+
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8
+
+```
+
+or:
+
+```bash
+
+git clone https://github.com/daggerok/kafka
+cd kafka/
+docker build --no-cache -f Dockerfile.openjdk8 -t my-kafka .
+docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
+
+```
+
 read more:
 
 - [spring-cloud-cli reference](http://cloud.spring.io/spring-cloud-static/spring-cloud-cli/1.4.0.RELEASE/single/spring-cloud-cli.html)
