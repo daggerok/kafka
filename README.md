@@ -17,7 +17,9 @@
 #### docker
 
 ```bash
+
 docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
+
 ```
 
 #### Dockerfile
@@ -27,6 +29,13 @@ docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
 FROM daggerok/kafka:spring-cloud-cli
 ENV ZOOKEEPER_PORT=2181 \
     KAFKA_PORT=9092
+
+```
+
+```bash
+
+docker build --no-cache -t my-kafka .
+docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 my-kafka
 
 ```
 
@@ -52,6 +61,14 @@ volumes:
 networks:
   backing-services:
     driver: bridge
+
+```
+
+```bash
+
+docker-compose up
+# ...
+docker-compose down -v
 
 ```
 
