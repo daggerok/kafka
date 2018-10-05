@@ -16,5 +16,6 @@ script:
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:${TRAVIS_BRANCH}
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:${TRAVIS_BRANCH}-alpine
   fi
-- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+#- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+- echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
 - docker push ${DOCKER_USERNAME}/kafka
