@@ -54,6 +54,7 @@ docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 my-ka
 version: '2.1'
 services:
   kafka:
+    #image: daggerok/kafka:spring-cloud-cli-openjdk8
     image: daggerok/kafka:spring-cloud-cli
     environment:
       ZOOKEEPER_PORT: 2181
@@ -61,11 +62,7 @@ services:
     ports:
     - '2181:2181'
     - '9092:9092'
-    volumes:
-    - 'kafka-data:/root'
     networks: [backing-services]
-volumes:
-  kafka-data: {}
 networks:
   backing-services:
     driver: bridge
@@ -96,6 +93,29 @@ git clone https://github.com/daggerok/kafka
 cd kafka/
 docker build --no-cache -f Dockerfile.openjdk8 -t my-kafka .
 docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
+
+```
+
+#### previous tiny version v10: based on openjdk:8u171-jdk-alpine3.8 image
+
+```yaml
+
+version: '2.1'
+services:
+  kafka:
+    image: daggerok/kafka:v10
+    environment:
+      ZOOKEEPER_PORT: 2181
+      ZOOKEEPER_DIR: ./zk
+      KAFKA_PORT: 9092
+      KAFKA_TOPICS: topicA,topicB
+      HTTP_PORT: 8080
+      HTTP_CONTEXT: /
+    ports: ['8080:8080']
+    networks: [backing-services]
+networks:
+  backing-services:
+    driver: bridge
 
 ```
 
