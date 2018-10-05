@@ -1,9 +1,17 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v10)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v11)](https://travis-ci.org/daggerok/kafka)
 [Docker image](https://hub.docker.com/r/daggerok/kafka/) of simple java app with embedded kafka
 
-- linux: alpine 3.8
-- java version: openjdk8 (8u171) + jce policy
+- based on [8u181-jre-slim-stretch](https://github.com/docker-library/openjdk/blob/86918ee28d383e7af63f535a2558040dce141099/8/jre/slim/Dockerfile) image
+- linux ubuntu, java openjdk8 (jre 8u181), jce policy
 - kafka version: 1.0.0
+
+**Available tags**:
+
+- [`daggerok/kafka:spring-cloud-cli (latest)`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-openjdk8`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
+- [`v11`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
+- [`v10`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
+- `...`
 
 **Exposed ports**:
 
@@ -17,7 +25,7 @@
 
 ```bash
 
-docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:v10
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:v11
 
 ```
 
@@ -25,9 +33,9 @@ docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:v10
 
 ```dockerfile
 
-FROM daggerok/kafka:v10
+FROM daggerok/kafka:v11
 ENV ZOOKEEPER_PORT=2181 \
-    ZOOKEEPER_DIR=/home/appuser \
+    ZOOKEEPER_DIR=/root/.zk \
     KAFKA_PORT=9092 \
     KAFKA_TOPICS="topic1,topic2,topic3" \
     HTTP_PORT=8080 \
@@ -47,15 +55,15 @@ services:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
       ZOOKEEPER_PORT: 2181
-      ZOOKEEPER_DIR: /home/appuser
+      ZOOKEEPER_DIR: ./zk
       KAFKA_PORT: 9092
-      KAFKA_TOPICS: topic1,topic2,topic3
+      KAFKA_TOPICS: orders,invoices
     ports:
     - '8080:8080'
     - '2181:2181'
     - '9092:9092'
     volumes:
-    - 'kafka-data:/home/appuser'
+    - 'kafka-data:/root'
     networks:
       backing-services:
         aliases:
@@ -100,6 +108,33 @@ docker build --no-cache -f Dockerfile.openjdk8 -t my-kafka .
 docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 ```
+
+#### previous tiny version v10: based on openjdk:8u171-jdk-alpine3.8 image
+
+```yaml
+
+version: '2.1'
+services:
+  kafka:
+    image: daggerok/kafka:v10
+    environment:
+      ZOOKEEPER_PORT: 2181
+      ZOOKEEPER_DIR: ./zk
+      KAFKA_PORT: 9092
+      KAFKA_TOPICS: topicA,topicB
+      HTTP_PORT: 8080
+      HTTP_CONTEXT: /
+    ports: ['8080:8080']
+    networks:
+      backing-services:
+        aliases:
+        - k
+        - kafka
+        - broker
+        - kafka-broker
+networks:
+  backing-services:
+    driver: bridge
 
 ```
 
