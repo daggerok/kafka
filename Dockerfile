@@ -17,7 +17,7 @@ RUN apt-get update -yqq \
  && apt-get clean  -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
                     openjdk-8-jdk curl unzip zip lsof bash psmisc \
- && curl -s "https://get.sdkman.io" | bash \
+ && curl -s 'https://get.sdkman.io' | bash \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
                && sdk selfupdate' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
@@ -29,7 +29,7 @@ RUN apt-get update -yqq \
  && /bin/bash -c 'echo "waiting for dependencies resolution on initial kafka bootstrap..." && sleep 150' \
  && /bin/bash -c 'echo "shutdown kafka..." && (killall -9 java || true)'
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
-ENTRYPOINT ["/bin/bash", "-c"]
+ENTRYPOINT ['/bin/bash', '-c']
 CMD ["source $HOME/.sdkman/bin/sdkman-init.sh && spring cloud kafka"]
 HEALTHCHECK \
   --timeout=1s \
@@ -38,20 +38,17 @@ HEALTHCHECK \
 
 ### you can use next docker-compose ###
 #
-# version: "2.1"
+# version: '2.1'
 # services:
 #   kafka:
 #     image: daggerok/kafka:spring-cloud-cli-openjdk8
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
-#     volumes: ["kafka-data:/root"]
 #     ports:
-#     - "2181:2181"
-#     - "9092:9092"
+#     - '2181:2181'
+#     - '9092:9092'
 #     networks: [backing-services]
-# volumes:
-#   kafka-data: {}
 # networks:
 #   backing-services:
 #     driver: bridge
