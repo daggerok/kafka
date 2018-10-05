@@ -2,6 +2,8 @@
 
 FROM ubuntu:18.04
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
+ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
+ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
 ARG ZOOKEEPER_PORT_ARG='2181'
 ARG KAFKA_PORT_ARG='9092'
 ARG JAVA_OPTS_ARG='\
@@ -9,7 +11,9 @@ ARG JAVA_OPTS_ARG='\
 -XX:+UnlockExperimentalVMOptions \
 -XX:+UseCGroupMemoryLimitForHeap \
 -XshowSettings:vm '
-ENV JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPTS_ARG}" \
+ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
+    SPRING_BOOT_VERSION="${SPRING_BOOT_VERSION_ARG}" \
+    JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPTS_ARG}" \
     ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
     HTTP_PORT='9091'
@@ -21,9 +25,9 @@ RUN apt-get update -yqq \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
                && sdk selfupdate' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
-               && sdk install springboot 2.0.4.RELEASE' \
+               && sdk install springboot ${SPRING_BOOT_VERSION}' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
-               && spring install org.springframework.cloud:spring-cloud-cli:2.0.0.RELEASE' \
+               && spring install org.springframework.cloud:spring-cloud-cli:${SPRING_CLOUD_CLI_VERSION}' \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
                && (spring cloud kafka &)' \
  && /bin/bash -c 'echo "waiting for dependencies resolution on initial kafka bootstrap..." && sleep 150' \

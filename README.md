@@ -1,9 +1,10 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=master)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=spring-cloud-cli-openjdk8)](https://travis-ci.org/daggerok/kafka)
 [Docker image](https://hub.docker.com/r/daggerok/kafka/) running `spring cloud kafka`
 
 - ubuntu 18.04 (boinic)
 - java version: oraclejdk8 + jce policy
-- spring-boot / CLI verstion: 2.0.4.RELEASE
+- spring-boot 2.0.5.RELEASE
+- spring-cloud CLI 2.0.0.RELEASE
 - kafka version: 1.0.2
 
 **Available tags**:
