@@ -19,29 +19,34 @@ ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     HTTP_PORT='9091'
 RUN apt-get update -yqq \
  && apt-get clean  -yqq \
+ && apt-get install -yqq --fix-missing --no-install-recommends \
+                    openjdk-8-jdk lsof bash \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    openjdk-8-jdk curl unzip zip lsof bash psmisc \
+                    curl unzip zip psmisc \
  && curl -s 'https://get.sdkman.io' | bash \
- && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
-               && sdk selfupdate' \
- && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
-               && sdk install springboot ${SPRING_BOOT_VERSION}' \
- && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
-               && spring install org.springframework.cloud:spring-cloud-cli:${SPRING_CLOUD_CLI_VERSION}' \
- && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
-               && (spring cloud kafka &)' \
- && /bin/bash -c 'echo "waiting for dependencies resolution on initial kafka bootstrap..." && sleep 150' \
- && /bin/bash -c 'echo "shutdown kafka..." && (killall -9 java || true)' \
- && apt-get remove -y --prune openjdk-8-jdk curl unzip zip lsof bash psmisc || echo 'nothing to remove...' \
- && apt-get autoremove -y || echo 'okay... who cares?' \
+ && /bin/bash -c '\
+    source "${HOME}/.sdkman/bin/sdkman-init.sh"                                           ; \
+    sdk selfupdate                                                                        ; \
+    source "${HOME}/.sdkman/bin/sdkman-init.sh"                                           ; \
+    sdk install springboot ${SPRING_BOOT_VERSION}                                         ; \
+    sdk use springboot ${SPRING_BOOT_VERSION}                                             ; \
+    spring install org.springframework.cloud:spring-cloud-cli:${SPRING_CLOUD_CLI_VERSION} ; \
+    (spring cloud kafka &)                                                                ; \
+    sleep 2 && echo -ne "Waiting for kafka installation"                                  ; \
+    while [[ $(lsof -i:${KAFKA_PORT}|awk "{print $2}"|wc -l || 0) -lt 1 ]]                ; \
+      do echo -ne "." && sleep 1                                                          ; \
+    done                                                                                  ; \
+    echo "Done." && (killall -9 java || true) ;' \
  && rm -rf /tmp/*
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 ENTRYPOINT ['/bin/bash', '-c']
-CMD ["source $HOME/.sdkman/bin/sdkman-init.sh && spring cloud kafka"]
+CMD ["source ${HOME}/.sdkman/bin/sdkman-init.sh && spring cloud kafka"]
 HEALTHCHECK \
   --timeout=2s \
   --retries=33 \
-  CMD test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 && test `lsof -i:${ZOOKEEPER_PORT}|awk '{print $2}'|wc -l` -ge 1 && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1
+  CMD test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 \
+   && test `lsof -i:${ZOOKEEPER_PORT}|awk '{print $2}'|wc -l` -ge 1 \
+   && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1
 
 ### you can use next docker-compose ###
 #

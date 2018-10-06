@@ -2,15 +2,16 @@
 [Docker image](https://hub.docker.com/r/daggerok/kafka/) running `spring cloud kafka`
 
 - ubuntu 18.04 (boinic)
-- java version: oraclejdk8 + jce policy
+- java: openjdk8 (jdk 8u181) + jce policy
 - spring-boot 2.0.5.RELEASE
 - spring-cloud CLI 2.0.0.RELEASE
 - kafka version: 1.0.2
 
 **Available tags**:
 
-- [`daggerok/kafka:spring-cloud-cli (latest)`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-openjdk8-jre`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8-jre/Dockerfile)
 - [`daggerok/kafka:spring-cloud-cli-openjdk8`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli (latest)`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
 - [`v11`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
 - [`v10`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
 - [`v9`](https://github.com/daggerok/kafka/blob/v9/Dockerfile)
@@ -27,7 +28,7 @@
 
 ```bash
 
-docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8
 
 ```
 
@@ -35,7 +36,7 @@ docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli
 
 ```dockerfile
 
-FROM daggerok/kafka:spring-cloud-cli
+FROM daggerok/kafka:spring-cloud-cli-openjdk8
 ENV ZOOKEEPER_PORT=2181 \
     KAFKA_PORT=9092
 
@@ -55,6 +56,7 @@ docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 my-ka
 version: '2.1'
 services:
   kafka:
+    #image: daggerok/kafka:spring-cloud-cli-openjdk8-jre
     image: daggerok/kafka:spring-cloud-cli-openjdk8
     #image: daggerok/kafka:spring-cloud-cli
     environment:
@@ -82,7 +84,7 @@ docker-compose down -v
 
 ```bash
 
-docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8-jre
 
 ```
 
