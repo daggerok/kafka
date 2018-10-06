@@ -31,12 +31,15 @@ RUN apt-get update -yqq \
  && /bin/bash -c 'source "$HOME/.sdkman/bin/sdkman-init.sh" \
                && (spring cloud kafka &)' \
  && /bin/bash -c 'echo "waiting for dependencies resolution on initial kafka bootstrap..." && sleep 150' \
- && /bin/bash -c 'echo "shutdown kafka..." && (killall -9 java || true)'
+ && /bin/bash -c 'echo "shutdown kafka..." && (killall -9 java || true)' \
+ && apt-get remove -y --prune openjdk-8-jdk curl unzip zip lsof bash psmisc || echo 'nothing to remove...' \
+ && apt-get autoremove -y || echo 'okay... who cares?' \
+ && rm -rf /tmp/*
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 ENTRYPOINT ['/bin/bash', '-c']
 CMD ["source $HOME/.sdkman/bin/sdkman-init.sh && spring cloud kafka"]
 HEALTHCHECK \
-  --timeout=1s \
+  --timeout=2s \
   --retries=33 \
   CMD test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 && test `lsof -i:${ZOOKEEPER_PORT}|awk '{print $2}'|wc -l` -ge 1 && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1
 
@@ -49,10 +52,13 @@ HEALTHCHECK \
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
+#     volumes: ["kafka-data:/root"]
 #     ports:
 #     - '2181:2181'
 #     - '9092:9092'
 #     networks: [backing-services]
+# volumes:
+#   kafka-data: {}
 # networks:
 #   backing-services:
 #     driver: bridge
