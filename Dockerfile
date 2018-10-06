@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v12
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v13
 
-FROM openjdk:8u181-jdk-stretch
+FROM openjdk:10.0.2-jre-slim-sid
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG='https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/embedded-kafka-0.0.3-all.jar'
 ARG ZOOKEEPER_DIR_ARG=/root
@@ -13,7 +13,6 @@ ARG HTTP_CONTEXT_ARG='/'
 ARG JAVA_OPTS_ARG='\
 -Djava.net.preferIPv4Stack=true \
 -XX:+UnlockExperimentalVMOptions \
--XX:+UseCGroupMemoryLimitForHeap \
 -XshowSettings:vm '
 ENV EMBEDDED_KAFKA_FAT_JAR_APP_URL="${EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG}" \
     JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPTS_ARG}" \
@@ -26,31 +25,19 @@ ENV EMBEDDED_KAFKA_FAT_JAR_APP_URL="${EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG}" \
 RUN apt-get update -yqq \
  && apt-get clean  -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    wget openssl openssh-client unzip zip lsof bash psmisc curl \
- && wget --no-cookies \
-         --no-check-certificate \
-         --header 'Cookie: oraclelicense=accept-securebackup-cookie' \
-                  'http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip' \
-         -O /tmp/jce_policy-8.zip \
- && unzip -o /tmp/jce_policy-8.zip -d /tmp \
- && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security || echo 'nothing to backup' \
- && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security || echo 'nothing to move...' \
+                    wget lsof bash psmisc curl \
  && wget -O ~/kafka.jar ${EMBEDDED_KAFKA_FAT_JAR_APP_URL} \
  && rm -rf /tmp/*
 WORKDIR /root
 VOLUME /root
 CMD /bin/bash
-ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
-                -XX:+UnlockExperimentalVMOptions \
-                -XX:+UseCGroupMemoryLimitForHeap \
-                -XshowSettings:vm \
-                -jar ~/kafka.jar \
-                        --zookeeperPort="${ZOOKEEPER_PORT}" \
-                        --zookeeperDir="${ZOOKEEPER_DIR}" \
-                        --kafkaPort="${KAFKA_PORT}" \
-                        --kafkaTopics="${KAFKA_TOPICS}" \
-                        --httpPort="${HTTP_PORT}" \
-                        --httpContext="${HTTP_CONTEXT}"
+ENTRYPOINT java ${JAVA_OPTS} -jar ~/kafka.jar \
+                                      --zookeeperPort="${ZOOKEEPER_PORT}" \
+                                      --zookeeperDir="${ZOOKEEPER_DIR}" \
+                                      --kafkaPort="${KAFKA_PORT}" \
+                                      --kafkaTopics="${KAFKA_TOPICS}" \
+                                      --httpPort="${HTTP_PORT}" \
+                                      --httpContext="${HTTP_CONTEXT}"
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 HEALTHCHECK \
   --timeout=2s \
@@ -65,7 +52,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:v12
+#     image: daggerok/kafka:v13
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       ZOOKEEPER_DIR: ./zk
