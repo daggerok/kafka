@@ -1,9 +1,9 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v12
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v19
 
-FROM openjdk:8u181-jdk-stretch
+FROM openjdk:8u181-jdk-slim-stretch
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG='https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/embedded-kafka-0.0.3-all.jar'
-ARG ZOOKEEPER_DIR_ARG=/root
+ARG ZOOKEEPER_DIR_ARG=/root/.zk
 ARG ZOOKEEPER_PORT_ARG='2181'
 ARG KAFKA_PORT_ARG='9092'
 ARG KAFKA_TOPICS_ARG='\
@@ -24,7 +24,7 @@ ENV EMBEDDED_KAFKA_FAT_JAR_APP_URL="${EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG}" \
     HTTP_PORT="${HTTP_PORT_ARG}" \
     HTTP_CONTEXT="${HTTP_CONTEXT_ARG}"
 RUN apt-get update -yqq \
- && apt-get clean  -yqq \
+ && apt-get clean -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
                     wget openssl openssh-client unzip zip lsof bash psmisc curl \
  && wget --no-cookies \
@@ -65,7 +65,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:v12
+#     image: daggerok/kafka:v19
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       ZOOKEEPER_DIR: ./zk
