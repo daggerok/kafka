@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v16
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v15
 
-FROM openjdk:10.0.2-jdk-sid
+FROM openjdk:10.0.2-jdk-slim-sid
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -57,7 +57,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-v16
+#     image: daggerok/kafka:spring-cloud-cli-v15
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
