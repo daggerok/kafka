@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v25
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v24
 
-FROM openjdk:12-ea-14-jdk-oraclelinux7
+FROM openjdk:12-ea-12-jdk-alpine3.8
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -16,9 +16,13 @@ ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
     HTTP_PORT='9091'
-RUN yum update -y \
- && yum install -y which lsof bash curl unzip zip psmisc \
- && curl -s 'https://get.sdkman.io' | bash \
+RUN apk add --no-cache --update \
+            lsof psmisc busybox-suid bash curl zip unzip sudo openssh-client shadow wget \
+ && adduser -h /home/appuser -s /bin/bash -D -u 1025 appuser wheel \
+ && echo 'appuser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
+ && sed -i 's/.*requiretty$/Defaults !requiretty/' /etc/sudoers
+USER appuser
+RUN curl -s 'https://get.sdkman.io' | bash \
  && bash -c '\
     source ~/.sdkman/bin/sdkman-init.sh                                                   ; \
     sdk selfupdate                                                                        ; \
@@ -32,11 +36,10 @@ RUN yum update -y \
       do echo -ne "." && sleep 1                                                          ; \
     done                                                                                  ; \
     echo "Done." && (killall -9 java || true) ;' \
- && yum autoremove -y \
- && yum clean all -y \
- && rm -rf ~/.sdkman/archives/* /tmp/*
-WORKDIR /root
-VOLUME /root
+ && sudo apk del busybox-suid zip unzip openssh-client shadow wget \
+ && sudo rm -rf ~/.sdkman/archives/* /tmp/*
+WORKDIR /home/appuser
+VOLUME /home/appuser
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 ## I couldn't beleive that there are must be " (double), but not ' (single quote) when using like so
 #ENTRYPOINT ["/bin/bash","-c"]
@@ -49,16 +52,16 @@ CMD /bin/bash
 HEALTHCHECK \
   --timeout=2s \
   --retries=33 \
-  CMD test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 \
+  CMD (test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 \
    && test `lsof -i:${ZOOKEEPER_PORT}|awk '{print $2}'|wc -l` -ge 1 \
-   && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1
+   && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1) || exit 1
 
 ### you can use next docker-compose ###
 #
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-v25
+#     image: daggerok/kafka:spring-cloud-cli-v24
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
