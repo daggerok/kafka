@@ -3,15 +3,16 @@
 
 - ubuntu 18.04 (boinic)
 - java version: oraclejdk8 + jce policy
-- spring-boot / CLI verstion: 2.0.4.RELEASE
+- spring-boot 2.0.5.RELEASE
+- spring-cloud CLI 2.0.0.RELEASE
 - kafka version: 1.0.2
 
 **Available tags**:
 
 - [`daggerok/kafka:spring-cloud-cli (latest)`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
 - [`daggerok/kafka:spring-cloud-cli-openjdk8`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
+- [`v11`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
 - [`v10`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
-- [`v9`](https://github.com/daggerok/kafka/blob/v9/Dockerfile)
 - `...`
 
 **Exposed ports**:
@@ -96,23 +97,39 @@ docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 ```
 
-#### previous tiny version v10: based on openjdk:8u171-jdk-alpine3.8 image
+#### different tiny kafka v11: based on openjdk:8u181-jre-slim-stretch image
 
 ```yaml
 
 version: '2.1'
 services:
   kafka:
-    image: daggerok/kafka:v10
+    image: daggerok/kafka:v11
     environment:
+      HTTP_PORT: 8080
+      HTP_CONTEXT: /
       ZOOKEEPER_PORT: 2181
       ZOOKEEPER_DIR: ./zk
       KAFKA_PORT: 9092
-      KAFKA_TOPICS: topicA,topicB
-      HTTP_PORT: 8080
-      HTTP_CONTEXT: /
-    ports: ['8080:8080']
-    networks: [backing-services]
+      KAFKA_TOPICS: orders,invoices
+    ports:
+    - '8080:8080'
+    - '2181:2181'
+    - '9092:9092'
+    volumes:
+    - 'kafka-data:/root'
+    networks:
+      backing-services:
+        aliases:
+        - k
+        - z
+        - zoo
+        - kafka
+        - broker
+        - zookeeper
+        - kafka-broker
+volumes:
+  kafka-data: {}
 networks:
   backing-services:
     driver: bridge
