@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v15
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v12
 
-FROM openjdk:10.0.2-jdk-slim-sid
+FROM openjdk:8u181-jdk-stretch
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -9,6 +9,7 @@ ARG KAFKA_PORT_ARG='9092'
 ARG JAVA_OPTS_ARG='\
 -Djava.net.preferIPv4Stack=true \
 -XX:+UnlockExperimentalVMOptions \
+-XX:+UseCGroupMemoryLimitForHeap \
 -XshowSettings:vm '
 ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     SPRING_BOOT_VERSION="${SPRING_BOOT_VERSION_ARG}" \
@@ -57,7 +58,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-v15
+#     image: daggerok/kafka:spring-cloud-cli-v12
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
