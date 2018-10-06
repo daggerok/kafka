@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v17
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v16
 
-FROM openjdk:10.0.2-jdk-oraclelinux7
+FROM openjdk:10.0.2-jdk-sid
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -16,8 +16,10 @@ ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
     HTTP_PORT='9091'
-RUN yum update -y \
- && yum install -y which lsof bash curl unzip zip psmisc \
+RUN apt-get update -yqq \
+ && apt-get clean -yqq \
+ && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
+                    lsof bash curl unzip zip psmisc \
  && curl -s 'https://get.sdkman.io' | bash \
  && bash -c '\
     source ~/.sdkman/bin/sdkman-init.sh; \
@@ -32,8 +34,6 @@ RUN yum update -y \
       do echo -ne "." && sleep 1; \
     done; \
     echo "Done." && (killall -9 java || true)' \
- && yum autoremove -y \
- && yum clean all -y \
  && rm -rf ~/.sdkman/archives/* /tmp/*
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 ## I couldn't beleive that there are must be " (double), but not ' (single quote) when using like so
@@ -47,7 +47,8 @@ CMD /bin/bash
 HEALTHCHECK \
   --timeout=2s \
   --retries=33 \
-  CMD test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 \
+  CMD curl -f "http://127.0.0.1:${HTTP_PORT}${HTTP_CONTEXT}" \
+   && test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 \
    && test `lsof -i:${ZOOKEEPER_PORT}|awk '{print $2}'|wc -l` -ge 1 \
    && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1
 
@@ -56,7 +57,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-v17
+#     image: daggerok/kafka:spring-cloud-cli-v16
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
