@@ -1,4 +1,4 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8u181-jdk-slim-stretch
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v19
 
 FROM openjdk:8u181-jdk-slim-stretch
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
@@ -18,13 +18,11 @@ ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
     HTTP_PORT='9091'
 RUN apt-get update -yqq \
- && apt-get clean  -yqq \
- && apt-get install -yqq --fix-missing --no-install-recommends \
-                    lsof bash \
+ && apt-get clean -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    curl unzip zip psmisc \
+                    lsof bash curl unzip zip psmisc \
  && curl -s 'https://get.sdkman.io' | bash \
- && /bin/bash -c '\
+ && bash -c '\
     source ~/.sdkman/bin/sdkman-init.sh                                                   ; \
     sdk selfupdate                                                                        ; \
     source ~/.sdkman/bin/sdkman-init.sh                                                   ; \
@@ -38,10 +36,13 @@ RUN apt-get update -yqq \
     done                                                                                  ; \
     echo "Done." && (killall -9 java || true) ;' \
  && rm -rf ~/.sdkman/archives/* /tmp/*
+WORKDIR /root
+VOLUME /root
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
-## I couldn't beleive that there are must be " (double), but not ' (single quote), fuck!
+## I couldn't beleive that there are must be " (double), but not ' (single quote) when using like so
 #ENTRYPOINT ["/bin/bash","-c"]
 #CMD ["source ~/.sdkman/bin/sdkman-init.sh && (spring cloud kafka || echo oops...)"]
+## fuck!
 ENTRYPOINT /bin/bash -c '\
            source ~/.sdkman/bin/sdkman-init.sh ; \
            (spring cloud kafka || echo " oops...")'
@@ -58,7 +59,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-openjdk8u181-jdk-slim-stretch
+#     image: daggerok/kafka:spring-cloud-cli-v19
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
