@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v22
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v23
 
-FROM openjdk:11-jdk-sid
+FROM openjdk:11-jdk-oraclelinux7
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -16,10 +16,8 @@ ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     ZOOKEEPER_PORT="${ZOOKEEPER_PORT_ARG}" \
     KAFKA_PORT="${KAFKA_PORT_ARG}" \
     HTTP_PORT='9091'
-RUN apt-get update -yqq \
- && apt-get clean -yqq \
- && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    lsof bash curl unzip zip psmisc \
+RUN yum update -y \
+ && yum install -y which lsof bash curl unzip zip psmisc \
  && curl -s 'https://get.sdkman.io' | bash \
  && bash -c '\
     source ~/.sdkman/bin/sdkman-init.sh                                                   ; \
@@ -34,6 +32,8 @@ RUN apt-get update -yqq \
       do echo -ne "." && sleep 1                                                          ; \
     done                                                                                  ; \
     echo "Done." && (killall -9 java || true) ;' \
+ && yum autoremove -y \
+ && yum clean all -y \
  && rm -rf ~/.sdkman/archives/* /tmp/*
 WORKDIR /root
 VOLUME /root
@@ -58,7 +58,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-v22
+#     image: daggerok/kafka:spring-cloud-cli-v23
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
