@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v17
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v23
 
-FROM openjdk:10.0.2-jdk-oraclelinux7
+FROM openjdk:11-jdk-oraclelinux7
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG='https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/embedded-kafka-0.0.3-all.jar'
 ARG ZOOKEEPER_DIR_ARG=/root
@@ -52,7 +52,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:v17
+#     image: daggerok/kafka:v23
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       ZOOKEEPER_DIR: ./zk
