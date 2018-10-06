@@ -1,11 +1,11 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=spring-cloud-cli-v23)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=spring-cloud-cli-v25)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`spring cloud kafka`](https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html) command installed using [sdkman](https://sdkman.io/)
 
-- based on `openjdk:11-jdk-oraclelinux7` image
+- based on `openjdk:12-ea-14-jdk-oraclelinux7` image
 
 using:
 
-- java openjdk11
+- java openjdk12
 - jce policy
 - spring-boot 2.0.5.RELEASE
 - spring-cloud CLI 2.0.0.RELEASE
@@ -36,6 +36,7 @@ using:
 
 *spring cloud kafka*
 
+- [`daggerok/kafka:spring-cloud-cli-v25` based on `openjdk:12-ea-14-jdk-oraclelinux7` image and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-v25/Dockerfile)
 - [`daggerok/kafka:spring-cloud-cli-v23` based on `openjdk:11-jdk-oraclelinux7` image and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-v23/Dockerfile)
 - [`daggerok/kafka:spring-cloud-cli-v22` based on `openjdk:11-jdk-sid` image and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-v22/Dockerfile)
 - [`daggerok/kafka:spring-cloud-cli-v21` based on `openjdk:11-jdk-slim-sid` image and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-v21/Dockerfile)
@@ -59,8 +60,8 @@ using:
 
 ```bash
 
-docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v23
-#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v23
+docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v25
+#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v25
 docker exec -it run-my-kafka /bin/bash
 
 ```
@@ -69,7 +70,7 @@ docker exec -it run-my-kafka /bin/bash
 
 ```dockerfile
 
-FROM daggerok/kafka:spring-cloud-cli-v23
+FROM daggerok/kafka:spring-cloud-cli-v25
 ENV ZOOKEEPER_PORT=2181 \
     KAFKA_PORT=9092
 
@@ -91,7 +92,9 @@ services:
   kafka:
     #image: daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
     #image: daggerok/kafka:spring-cloud-cli-openjdk8-ubuntu
-    image: daggerok/kafka:spring-cloud-cli-v23
+    image: daggerok/kafka:spring-cloud-cli-v25
+    #image: daggerok/kafka:spring-cloud-cli-v24
+    #image: daggerok/kafka:spring-cloud-cli-v23
     #image: daggerok/kafka:spring-cloud-cli-v22
     #image: daggerok/kafka:spring-cloud-cli-v21
     #image: daggerok/kafka:spring-cloud-cli-v19
