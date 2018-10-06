@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v19
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-v21
 
-FROM openjdk:8u181-jdk-slim-stretch
+FROM openjdk:11-jdk-slim-sid
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -9,7 +9,6 @@ ARG KAFKA_PORT_ARG='9092'
 ARG JAVA_OPTS_ARG='\
 -Djava.net.preferIPv4Stack=true \
 -XX:+UnlockExperimentalVMOptions \
--XX:+UseCGroupMemoryLimitForHeap \
 -XshowSettings:vm '
 ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
     SPRING_BOOT_VERSION="${SPRING_BOOT_VERSION_ARG}" \
@@ -45,7 +44,7 @@ EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
 ## fuck!
 ENTRYPOINT /bin/bash -c '\
            source ~/.sdkman/bin/sdkman-init.sh ; \
-           (spring cloud kafka || echo " oops...")'
+           (spring cloud kafka || echo "bye...")'
 CMD /bin/bash
 HEALTHCHECK \
   --timeout=2s \
@@ -59,7 +58,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-v19
+#     image: daggerok/kafka:spring-cloud-cli-v21
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
