@@ -11,10 +11,8 @@ script:
 - |
   if [ "${TRAVIS_BRANCH}" == "master" ]; then
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:latest
-    docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:ubuntu
   else
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:${TRAVIS_BRANCH}
-    docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:${TRAVIS_BRANCH}-ubuntu
   fi
 #- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin

@@ -1,31 +1,41 @@
 # kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v11)](https://travis-ci.org/daggerok/kafka)
-[Docker image](https://hub.docker.com/r/daggerok/kafka/) of simple java app with embedded kafka
+[Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`daggerok/embedded-kafka`](https://github.com/daggerok/kafka) app
 
-- based on [8u181-jre-slim-stretch](https://github.com/docker-library/openjdk/blob/86918ee28d383e7af63f535a2558040dce141099/8/jre/slim/Dockerfile) image
-- linux ubuntu, java openjdk8 (jre 8u181), jce policy
-- kafka version: 1.0.0
+- based on `openjdk:8u181-jre-slim-stretch` image
+
+using: kafka 1.0.0
 
 **Available tags**:
 
-- [`daggerok/kafka:spring-cloud-cli (latest)`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
-- [`daggerok/kafka:spring-cloud-cli-openjdk8`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
-- [`v11`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
-- [`v10`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
-- `...`
+*daggerok/embedded-kafka*
+
+- [TODO: `daggerok/kafka:latest` based on `openjdk:12-ea-14-jdk-oraclelinux7` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:v12` based on `openjdk:8u181-jdk-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v12/Dockerfile)
+- [`daggerok/kafka:v11` based on `openjdk:8u181-jre-slim-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
+- [`daggerok/kafka:v10` based on `openjdk:8u171-jdk-alpine3.8` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
+- [`daggerok/kafka:v9` based on `openjdk:8u151-jre-alpine3.7` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v9/Dockerfile)
+
+*spring cloud kafka*
+
+- [`daggerok/kafka:spring-cloud-cli-openjdk8` based on `ubuntu`, `openjdk8` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-openjdk8u181` based on `openjdk:8u181-jdk-slim-stretch` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8u181/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu` based on `ubuntu`, `oraclejdk8` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-oraclejdk8-ubuntu/Dockerfile)
 
 **Exposed ports**:
 
 - 2128 - zookeeper
 - 9092 - kafka broker
-- 9091 - http actuator endpoints
+- 9091 - health endpoint
 
 ### Usage:
 
-#### docker
+#### rapid development with docker
 
 ```bash
 
-docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:v11
+docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v11
+#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v11
+docker exec -it run-my-kafka /bin/bash
 
 ```
 
@@ -43,6 +53,13 @@ ENV ZOOKEEPER_PORT=2181 \
 
 ```
 
+```bash
+
+docker build --no-cache -t my-kafka .
+docker run -it --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 my-kafka
+
+```
+
 #### docker-compose.yml
 
 ```yaml
@@ -50,7 +67,8 @@ ENV ZOOKEEPER_PORT=2181 \
 version: '2.1'
 services:
   kafka:
-    image: daggerok/kafka:v10
+    image: daggerok/kafka:v11
+    #image: daggerok/kafka:v12
     environment:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
@@ -98,39 +116,84 @@ docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8
 
 ```
 
-or:
+or use sources:
 
 ```bash
 
 git clone https://github.com/daggerok/kafka
 cd kafka/
 docker build --no-cache -f Dockerfile.openjdk8 -t my-kafka .
-docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
+docker run -it --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 ```
 
-#### previous tiny version v10: based on openjdk:8u171-jdk-alpine3.8 image
+#### different kafka images
+
+*alpine*
 
 ```yaml
 
 version: '2.1'
 services:
   kafka:
+    #image: daggerok/kafka:v9
     image: daggerok/kafka:v10
     environment:
+      HTTP_PORT: 8080
+      HTP_CONTEXT: /
       ZOOKEEPER_PORT: 2181
       ZOOKEEPER_DIR: ./zk
       KAFKA_PORT: 9092
-      KAFKA_TOPICS: topicA,topicB
-      HTTP_PORT: 8080
-      HTTP_CONTEXT: /
-    ports: ['8080:8080']
+      KAFKA_TOPICS: orders,invoices
+    ports:
+    - '8080:8080'
+    - '2181:2181'
+    - '9092:9092'
+    volumes:
+    - 'kafka-data:/home'
     networks:
       backing-services:
         aliases:
         - k
+        - z
+        - zoo
         - kafka
         - broker
+        - zookeeper
+        - kafka-broker
+volumes:
+  kafka-data: {}
+networks:
+  backing-services:
+    driver: bridge
+
+```
+
+*spring cloud kafka*
+
+```yaml
+
+version: '2.1'
+services:
+  kafka:
+    #image: daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
+    image: daggerok/kafka:spring-cloud-cli-openjdk8u181
+    #image: daggerok/kafka:spring-cloud-cli-openjdk8
+    environment:
+      ZOOKEEPER_PORT: 2181
+      KAFKA_PORT: 9092
+    ports:
+    - '2181:2181'
+    - '9092:9092'
+    networks:
+      backing-services:
+        aliases:
+        - k
+        - z
+        - zoo
+        - kafka
+        - broker
+        - zookeeper
         - kafka-broker
 networks:
   backing-services:
@@ -140,8 +203,10 @@ networks:
 
 read more:
 
+- [sdkman](https://sdkman.io/)
 - [spring-cloud-cli reference](http://cloud.spring.io/spring-cloud-static/spring-cloud-cli/1.4.0.RELEASE/single/spring-cloud-cli.html)
 - [spring-cloud-cli project](https://cloud.spring.io/spring-cloud-cli/)
-- [spring-cloud-cli github](https://github.com/spring-cloud/spring-cloud-cli/tree/master/docs/src/main/asciidoc)
-- [using spring-boot-cli](https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html)
 - [installing spring-boot-cli](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-installing-spring-boot.html)
+- [using spring-boot-cli](https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html)
+- [GitHub: spring-cloud-cli](https://github.com/spring-cloud/spring-cloud-cli/tree/master/docs/src/main/asciidoc)
+- [GitHub: daggerok/embedded-kafka](https://github.com/daggerok/kafka)

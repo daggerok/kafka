@@ -1,4 +1,4 @@
-# docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:v11
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v11
 
 FROM openjdk:8u181-jre-slim-stretch
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
@@ -26,16 +26,16 @@ ENV EMBEDDED_KAFKA_FAT_JAR_APP_URL="${EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG}" \
 RUN apt-get update -yqq \
  && apt-get clean  -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
-                    wget openssl openssh-client unzip zip lsof bash psmisc curl
-RUN wget --no-cookies \
+                    wget openssl openssh-client unzip zip lsof bash psmisc curl \
+ && wget --no-cookies \
          --no-check-certificate \
          --header 'Cookie: oraclelicense=accept-securebackup-cookie' \
                   'http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip' \
          -O /tmp/jce_policy-8.zip \
  && unzip -o /tmp/jce_policy-8.zip -d /tmp \
  && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security || echo 'nothing to backup' \
- && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security || echo 'cannot move files...' \
- && wget -O /root/kafka.jar ${EMBEDDED_KAFKA_FAT_JAR_APP_URL} \
+ && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security || echo 'nothing to move...' \
+ && wget -O ~/kafka.jar ${EMBEDDED_KAFKA_FAT_JAR_APP_URL} \
  && rm -rf /tmp/*
 WORKDIR /root
 VOLUME /root
@@ -44,7 +44,7 @@ ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                 -XX:+UnlockExperimentalVMOptions \
                 -XX:+UseCGroupMemoryLimitForHeap \
                 -XshowSettings:vm \
-                -jar /home/appuser/kafka.jar \
+                -jar ~/kafka.jar \
                         --zookeeperPort="${ZOOKEEPER_PORT}" \
                         --zookeeperDir="${ZOOKEEPER_DIR}" \
                         --kafkaPort="${KAFKA_PORT}" \
@@ -52,9 +52,13 @@ ENTRYPOINT java -Djava.net.preferIPv4Stack=true \
                         --httpPort="${HTTP_PORT}" \
                         --httpContext="${HTTP_CONTEXT}"
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
-HEALTHCHECK --timeout=2s \
-            --retries=22 \
-            CMD curl -f "http://127.0.0.1:${HTTP_PORT}${HTTP_CONTEXT}" || exit 1
+HEALTHCHECK \
+  --timeout=2s \
+  --retries=33 \
+  CMD curl -f "http://127.0.0.1:${HTTP_PORT}${HTTP_CONTEXT}" \
+   && test `lsof -i:${KAFKA_PORT}|awk '{print $2}'|wc -l` -ge 1 \
+   && test `lsof -i:${ZOOKEEPER_PORT}|awk '{print $2}'|wc -l` -ge 1 \
+   && test `lsof -i:${HTTP_PORT}|awk '{print $2}'|wc -l` -ge 1
 
 ### you can use next docker-compose ###
 #
