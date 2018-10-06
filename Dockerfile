@@ -36,8 +36,6 @@ RUN wget --no-cookies \
  && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security || echo 'nothing to backup' \
  && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security || echo 'cannot move files...' \
  && wget -O /root/kafka.jar ${EMBEDDED_KAFKA_FAT_JAR_APP_URL} \
- && apt-get remove -y --purge wget openssl openssh-client unzip zip lsof psmisc \
- && apt-get autoremove -y \
  && rm -rf /tmp/*
 WORKDIR /root
 VOLUME /root
