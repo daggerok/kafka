@@ -1,7 +1,7 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v24)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v25)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`daggerok/embedded-kafka`](https://github.com/daggerok/kafka) app
 
-- based on `openjdk:12-ea-12-jdk-alpine3.8` image
+- based on `openjdk:12-ea-14-jdk-oraclelinux7` image
 
 using: kafka 1.0.0
 
@@ -10,8 +10,9 @@ using: kafka 1.0.0
 *daggerok/embedded-kafka*
 
 - [TODO: `daggerok/kafka:latest` based on `openjdk:12-ea-14-jdk-oraclelinux7` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:v25` based on `openjdk:12-ea-14-jdk-oraclelinux7` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v25/Dockerfile)
 - [`daggerok/kafka:v24` based on `openjdk:12-ea-12-jdk-alpine3.8` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v24/Dockerfile)
-- [`daggerok/kafka:v23` based on `openjdk:11-jdk-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v23/Dockerfile)
+- [`daggerok/kafka:v23` based on `openjdk:11-jdk-oraclelinux7` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v23/Dockerfile)
 - [`daggerok/kafka:v22` based on `openjdk:11-jdk-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v22/Dockerfile)
 - [`daggerok/kafka:v21` based on `openjdk:11-jdk-slim-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v21/Dockerfile)
 - [`daggerok/kafka:v20` based on `openjdk:11-jre-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v20/Dockerfile)
@@ -49,8 +50,8 @@ using: kafka 1.0.0
 
 ```bash
 
-docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v24
-#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v24
+docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v25
+#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v25
 docker exec -it run-my-kafka /bin/bash
 
 ```
@@ -59,11 +60,11 @@ docker exec -it run-my-kafka /bin/bash
 
 ```dockerfile
 
-FROM daggerok/kafka:v24
+FROM daggerok/kafka:v25
 ENV ZOOKEEPER_PORT=2181 \
-    ZOOKEEPER_DIR=/home/appuser \
+    ZOOKEEPER_DIR=/root/.zk \
     KAFKA_PORT=9092 \
-    KAFKA_TOPICS='orderds,invoices' \
+    KAFKA_TOPICS='orders,invoices' \
     HTTP_PORT=8080 \
     HTTP_CONTEXT=/
 
@@ -83,14 +84,25 @@ docker run -it --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 m
 version: '2.1'
 services:
   kafka:
-    #image: daggerok/kafka:v9
-    #image: daggerok/kafka:v10
-    image: daggerok/kafka:v24
+    #image: daggerok/kafka:v11
+    #image: daggerok/kafka:v12
+    #image: daggerok/kafka:v13
+    #image: daggerok/kafka:v14
+    #image: daggerok/kafka:v15
+    #image: daggerok/kafka:v16
+    #image: daggerok/kafka:v17
+    #image: daggerok/kafka:v18
+    #image: daggerok/kafka:v19
+    #image: daggerok/kafka:v20
+    #image: daggerok/kafka:v21
+    #image: daggerok/kafka:v22
+    #image: daggerok/kafka:v23
+    image: daggerok/kafka:v25
     environment:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
       ZOOKEEPER_PORT: 2181
-      ZOOKEEPER_DIR: /home/appuser
+      ZOOKEEPER_DIR: ./zk
       KAFKA_PORT: 9092
       KAFKA_TOPICS: orders,invoices
     ports:
@@ -98,7 +110,7 @@ services:
     - '2181:2181'
     - '9092:9092'
     volumes:
-    - 'kafka-data:/home'
+    - 'kafka-data:/root'
     networks:
       backing-services:
         aliases:
@@ -146,26 +158,15 @@ docker run -it --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 #### different kafka images
 
-**debian, rhel**
+*alpine*
 
 ```yaml
 
 version: '2.1'
 services:
   kafka:
-    #image: daggerok/kafka:v11
-    #image: daggerok/kafka:v12
-    #image: daggerok/kafka:v13
-    #image: daggerok/kafka:v14
-    #image: daggerok/kafka:v15
-    #image: daggerok/kafka:v16
-    #image: daggerok/kafka:v17
-    #image: daggerok/kafka:v18
-    #image: daggerok/kafka:v19
-    #image: daggerok/kafka:v20
-    #image: daggerok/kafka:v21
-    #image: daggerok/kafka:v22
-    image: daggerok/kafka:v23
+    #image: daggerok/kafka:v9
+    image: daggerok/kafka:v10
     environment:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
@@ -178,7 +179,7 @@ services:
     - '2181:2181'
     - '9092:9092'
     volumes:
-    - 'kafka-data:/root'
+    - 'kafka-data:/home'
     networks:
       backing-services:
         aliases:
