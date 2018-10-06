@@ -1,7 +1,7 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v12)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v13)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`daggerok/embedded-kafka`](https://github.com/daggerok/kafka) app
 
-- based on `openjdk:8u181-jdk-stretch` image
+- based on `openjdk:10.0.2-jre-slim-sid` image
 
 using: kafka 1.0.0
 
@@ -10,6 +10,7 @@ using: kafka 1.0.0
 *daggerok/embedded-kafka*
 
 - [TODO: `daggerok/kafka:latest` based on `openjdk:12-ea-14-jdk-oraclelinux7` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:v13` based on `openjdk:10.0.2-jre-slim-sid` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v13/Dockerfile)
 - [`daggerok/kafka:v12` based on `openjdk:8u181-jdk-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v12/Dockerfile)
 - [`daggerok/kafka:v11` based on `openjdk:8u181-jre-slim-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
 - [`daggerok/kafka:v10` based on `openjdk:8u171-jdk-alpine3.8` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
@@ -33,8 +34,8 @@ using: kafka 1.0.0
 
 ```bash
 
-docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v12
-#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v12
+docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v13
+#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v13
 docker exec -it run-my-kafka /bin/bash
 
 ```
@@ -68,7 +69,8 @@ version: '2.1'
 services:
   kafka:
     #image: daggerok/kafka:v11
-    image: daggerok/kafka:v12
+    #image: daggerok/kafka:v12
+    image: daggerok/kafka:v13
     environment:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
