@@ -1,4 +1,4 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8u181
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8u181-jdk-slim-stretch
 
 FROM openjdk:8u181-jdk-slim-stretch
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
@@ -58,7 +58,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-openjdk8u181
+#     image: daggerok/kafka:spring-cloud-cli-openjdk8u181-jdk-slim-stretch
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
