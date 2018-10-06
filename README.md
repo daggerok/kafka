@@ -1,7 +1,7 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v21)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=v22)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`daggerok/embedded-kafka`](https://github.com/daggerok/kafka) app
 
-- based on `openjdk:11-jdk-slim-sid` image
+- based on `openjdk:11-jdk-sid` image
 
 using: kafka 1.0.0
 
@@ -10,6 +10,7 @@ using: kafka 1.0.0
 *daggerok/embedded-kafka*
 
 - [TODO: `daggerok/kafka:latest` based on `openjdk:12-ea-14-jdk-oraclelinux7` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:v22` based on `openjdk:11-jdk-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v22/Dockerfile)
 - [`daggerok/kafka:v21` based on `openjdk:11-jdk-slim-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v21/Dockerfile)
 - [`daggerok/kafka:v20` based on `openjdk:11-jre-sid` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v20/Dockerfile)
 - [`daggerok/kafka:v19` based on `openjdk:8u181-jdk-slim-stretch` image and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v19/Dockerfile)
@@ -46,8 +47,8 @@ using: kafka 1.0.0
 
 ```bash
 
-docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v21
-#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v21
+docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v22
+#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v22
 docker exec -it run-my-kafka /bin/bash
 
 ```
@@ -56,7 +57,7 @@ docker exec -it run-my-kafka /bin/bash
 
 ```dockerfile
 
-FROM daggerok/kafka:v21
+FROM daggerok/kafka:v22
 ENV ZOOKEEPER_PORT=2181 \
     ZOOKEEPER_DIR=/root/.zk \
     KAFKA_PORT=9092 \
@@ -90,7 +91,8 @@ services:
     #image: daggerok/kafka:v18
     #image: daggerok/kafka:v19
     #image: daggerok/kafka:v20
-    image: daggerok/kafka:v21
+    #image: daggerok/kafka:v21
+    image: daggerok/kafka:v22
     environment:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
