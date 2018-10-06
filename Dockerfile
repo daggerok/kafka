@@ -1,4 +1,4 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
 
 FROM ubuntu:18.04
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
@@ -62,7 +62,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka
+#     image: daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092

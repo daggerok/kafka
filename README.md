@@ -1,11 +1,11 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=master)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=spring-cloud-cli-oraclejdk8-ubuntu)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`spring cloud kafka`](https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html) command installed using [sdkman](https://sdkman.io/)
 
-- based on `ubuntu 18.04 (boinic)` image
+- based on `ubuntu:18.04` image (boinic)
 
 using:
 
-- java oracle jdk8u181
+- java oraclejdk8 (8u181)
 - jce policy
 - spring-boot 2.0.5.RELEASE
 - spring-cloud CLI 2.0.0.RELEASE
@@ -13,18 +13,26 @@ using:
 
 **Available tags**:
 
-*spring cloud kafka*
-
-- [`daggerok/kafka:latest` based on `ubuntu`, `oraclejdk8` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
-- [`daggerok/kafka:spring-cloud-cli-openjdk8` based on `ubuntu`, `openjdk8` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8/Dockerfile)
-- [`daggerok/kafka:spring-cloud-cli-openjdk8u181` based on `openjdk:8u181-jdk-slim-stretch` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8u181/Dockerfile)
-
 *daggerok/embedded-kafka*
 
+- [TODO: `daggerok/kafka:latest` based on `openjdk:12-ea-14-jdk-oraclelinux7` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/master/Dockerfile)
+- [`daggerok/kafka:v19` based on `openjdk:8u181-jdk-slim-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v19/Dockerfile)
+- [`daggerok/kafka:v18` based on `openjdk:11-jre-slim-sid` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v17/Dockerfile)
+- [`daggerok/kafka:v17` based on `openjdk:10.0.2-jdk-oraclelinux7` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v17/Dockerfile)
+- [`daggerok/kafka:v16` based on `openjdk:10.0.2-jdk-sid` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v16/Dockerfile)
+- [`daggerok/kafka:v15` based on `openjdk:10.0.2-jdk-slim-sid` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v15/Dockerfile)
+- [`daggerok/kafka:v14` based on `openjdk:10.0.2-jre-sid` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v14/Dockerfile)
+- [`daggerok/kafka:v13` based on `openjdk:10.0.2-jre-slim-sid` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v13/Dockerfile)
 - [`daggerok/kafka:v12` based on `openjdk:8u181-jdk-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v12/Dockerfile)
 - [`daggerok/kafka:v11` based on `openjdk:8u181-jre-slim-stretch` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v11/Dockerfile)
 - [`daggerok/kafka:v10` based on `openjdk:8u171-jdk-alpine3.8` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v10/Dockerfile)
 - [`daggerok/kafka:v9` based on `openjdk:8u151-jre-alpine3.7` and `daggerok/enbedded-kafka`](https://github.com/daggerok/kafka/blob/v9/Dockerfile)
+
+*spring cloud kafka*
+
+- [`daggerok/kafka:spring-cloud-cli-v19` based on `openjdk:8u181-jdk-slim-stretch` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-v19/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-openjdk8-ubuntu` based on `ubuntu`, `openjdk8` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-openjdk8-ubuntu/Dockerfile)
+- [`daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu` based on `ubuntu`, `oraclejdk8` and `spring-cloud-cli`](https://github.com/daggerok/kafka/blob/spring-cloud-cli-oraclejdk8-ubuntu/Dockerfile)
 
 **Exposed ports**:
 
@@ -38,8 +46,8 @@ using:
 
 ```bash
 
-docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka
-#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka
+docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
+#docker run --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
 docker exec -it run-my-kafka /bin/bash
 
 ```
@@ -48,7 +56,7 @@ docker exec -it run-my-kafka /bin/bash
 
 ```dockerfile
 
-FROM daggerok/kafka
+FROM daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
 ENV ZOOKEEPER_PORT=2181 \
     KAFKA_PORT=9092
 
@@ -68,9 +76,9 @@ docker run -it --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p 9091:9091 m
 version: '2.1'
 services:
   kafka:
-    #image: daggerok/kafka:spring-cloud-cli-openjdk8u181
-    #image: daggerok/kafka:spring-cloud-cli-openjdk8
-    image: daggerok/kafka
+    image: daggerok/kafka:spring-cloud-cli-oraclejdk8-ubuntu
+    #image: daggerok/kafka:spring-cloud-cli-openjdk8-ubuntu
+    #image: daggerok/kafka:spring-cloud-cli-v19
     environment:
       ZOOKEEPER_PORT: 2181
       KAFKA_PORT: 9092
@@ -105,7 +113,7 @@ docker-compose down -v
 
 ```bash
 
-docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8
+docker run -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8-ubuntu
 
 ```
 
@@ -122,7 +130,7 @@ docker run -it --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 my-kafka
 
 #### different kafka images
 
-**ubuntu**
+**daggerok/embedded-kafka**
 
 ```yaml
 
@@ -130,7 +138,14 @@ version: '2.1'
 services:
   kafka:
     #image: daggerok/kafka:v11
-    image: daggerok/kafka:v12
+    #image: daggerok/kafka:v12
+    #image: daggerok/kafka:v13
+    #image: daggerok/kafka:v14
+    #image: daggerok/kafka:v15
+    #image: daggerok/kafka:v16
+    #image: daggerok/kafka:v17
+    #image: daggerok/kafka:v18
+    image: daggerok/kafka:v19
     environment:
       HTTP_PORT: 8080
       HTP_CONTEXT: /
