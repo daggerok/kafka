@@ -1,6 +1,6 @@
-# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v17
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:v18
 
-FROM openjdk:10.0.2-jdk-oraclelinux7
+FROM openjdk:11-jre-slim-sid
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG='https://raw.githubusercontent.com/daggerok/embedded-kafka/mvn-repo/embedded-kafka-0.0.3-all.jar'
 ARG ZOOKEEPER_DIR_ARG=/root
@@ -22,11 +22,11 @@ ENV EMBEDDED_KAFKA_FAT_JAR_APP_URL="${EMBEDDED_KAFKA_FAT_JAR_APP_URL_ARG}" \
     KAFKA_TOPICS="${KAFKA_TOPICS_ARG}" \
     HTTP_PORT="${HTTP_PORT_ARG}" \
     HTTP_CONTEXT="${HTTP_CONTEXT_ARG}"
-RUN yum update -y \
- && yum install -y wget lsof bash psmisc curl \
+RUN apt-get update -yqq \
+ && apt-get clean -yqq \
+ && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
+                    wget lsof bash psmisc curl \
  && wget -O ~/kafka.jar ${EMBEDDED_KAFKA_FAT_JAR_APP_URL} \
- && yum autoremove -y \
- && yum clean all -y \
  && rm -rf /tmp/*
 WORKDIR /root
 VOLUME /root
@@ -52,7 +52,7 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:v17
+#     image: daggerok/kafka:v18
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       ZOOKEEPER_DIR: ./zk
