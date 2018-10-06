@@ -1,6 +1,6 @@
-# docker run --rm --name=run-my-kafka -p 2181:2181 -p 9092:9092 -p daggerok/kafka:spring-cloud-cli-openjdk8
+# docker run -it --rm --name run-my-kafka -p 2181:2181 -p 9092:9092 daggerok/kafka:spring-cloud-cli-openjdk8u181
 
-FROM ubuntu:18.04
+FROM openjdk:8u181-jdk-slim-stretch
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
 ARG SPRING_CLOUD_CLI_VERSION_ARG='2.0.0.RELEASE'
 ARG SPRING_BOOT_VERSION_ARG='2.0.5.RELEASE'
@@ -20,14 +20,14 @@ ENV SPRING_CLOUD_CLI_VERSION="${SPRING_CLOUD_CLI_VERSION_ARG}" \
 RUN apt-get update -yqq \
  && apt-get clean  -yqq \
  && apt-get install -yqq --fix-missing --no-install-recommends \
-                    openjdk-8-jdk lsof bash \
+                    lsof bash \
  && apt-get install -yqq --fix-missing --no-install-recommends --autoremove \
                     curl unzip zip psmisc \
  && curl -s 'https://get.sdkman.io' | bash \
  && /bin/bash -c '\
-    source "${HOME}/.sdkman/bin/sdkman-init.sh"                                           ; \
+    source ~/.sdkman/bin/sdkman-init.sh                                                   ; \
     sdk selfupdate                                                                        ; \
-    source "${HOME}/.sdkman/bin/sdkman-init.sh"                                           ; \
+    source ~/.sdkman/bin/sdkman-init.sh                                                   ; \
     sdk install springboot ${SPRING_BOOT_VERSION}                                         ; \
     sdk use springboot ${SPRING_BOOT_VERSION}                                             ; \
     spring install org.springframework.cloud:spring-cloud-cli:${SPRING_CLOUD_CLI_VERSION} ; \
@@ -37,10 +37,15 @@ RUN apt-get update -yqq \
       do echo -ne "." && sleep 1                                                          ; \
     done                                                                                  ; \
     echo "Done." && (killall -9 java || true) ;' \
- && rm -rf /tmp/*
+ && rm -rf ~/.sdkman/archives/* /tmp/*
 EXPOSE ${ZOOKEEPER_PORT} ${KAFKA_PORT} ${HTTP_PORT}
-ENTRYPOINT ['/bin/bash', '-c']
-CMD ["source ${HOME}/.sdkman/bin/sdkman-init.sh && spring cloud kafka"]
+## I couldn't beleive that there are must be " (double), but not ' (single quote), fuck!
+#ENTRYPOINT ["/bin/bash","-c"]
+#CMD ["source ~/.sdkman/bin/sdkman-init.sh && (spring cloud kafka || echo oops...)"]
+ENTRYPOINT /bin/bash -c '\
+           source ~/.sdkman/bin/sdkman-init.sh ; \
+           (spring cloud kafka || echo " oops...")'
+CMD /bin/bash
 HEALTHCHECK \
   --timeout=2s \
   --retries=33 \
@@ -53,17 +58,14 @@ HEALTHCHECK \
 # version: '2.1'
 # services:
 #   kafka:
-#     image: daggerok/kafka:spring-cloud-cli-openjdk8
+#     image: daggerok/kafka:spring-cloud-cli-openjdk8u181
 #     environment:
 #       ZOOKEEPER_PORT: 2181
 #       KAFKA_PORT: 9092
-#     volumes: ["kafka-data:/root"]
 #     ports:
 #     - '2181:2181'
 #     - '9092:9092'
 #     networks: [backing-services]
-# volumes:
-#   kafka-data: {}
 # networks:
 #   backing-services:
 #     driver: bridge
