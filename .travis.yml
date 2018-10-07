@@ -11,6 +11,9 @@ script:
 - |
   if [ "${TRAVIS_BRANCH}" == "master" ]; then
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:latest
+  elif [ "${TRAVIS_BRANCH}" == "single" ]; then
+    echo ":)"
+    exit 0
   else
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:${TRAVIS_BRANCH}
   fi
