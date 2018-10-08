@@ -11,12 +11,8 @@ script:
 - |
   if [ "${TRAVIS_BRANCH}" == "master" ]; then
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:latest
-  elif [ "${TRAVIS_BRANCH}" == "single" ]; then
-    echo ":)"
-    exit 0
   else
     docker tag ${DOCKER_USERNAME}/kafka ${DOCKER_USERNAME}/kafka:${TRAVIS_BRANCH}
   fi
-#- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
 - docker push ${DOCKER_USERNAME}/kafka
