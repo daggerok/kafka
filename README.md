@@ -3,7 +3,7 @@
 
 - based on `openjdk:8u171-jre-alpine3.8` image
 
-using: kafka 1.0.0
+using: kafka 2
 
 **Available tags**:
 
