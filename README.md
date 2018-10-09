@@ -1,4 +1,4 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=confluent-4.1.1)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=confluent-4.1.2)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`daggerok/embedded-kafka`](https://github.com/daggerok/kafka) app
 
 - based on `openjdk:12-ea-12-jdk-alpine3.8` image

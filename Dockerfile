@@ -3,8 +3,8 @@
 FROM openjdk:7u181-jre-alpine3.8
 #FROM openjdk:8u171-jre-alpine3.8
 LABEL MAINTAINER='Maksim Kostromin https://github.com/daggerok'
-ARG CONFLUENT_VERSION='3.3'
-ARG CONFLUENT_FULL_VERSION='4.1.1'
+ARG CONFLUENT_VERSION='4.1'
+ARG CONFLUENT_FULL_VERSION='4.1.2'
 ARG SCALA_VERSION='2.11'
 ARG CONFLUENT_DIRNAME="confluent-${CONFLUENT_FULL_VERSION}"
 ARG CONFLUENT_BASE_URL='https://packages.confluent.io/archive'
