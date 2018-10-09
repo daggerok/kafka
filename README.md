@@ -1,4 +1,4 @@
-# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=confluent-4.1.2)](https://travis-ci.org/daggerok/kafka)
+# kafka [![Build Status](https://travis-ci.org/daggerok/kafka.svg?branch=confluent-5.0.0)](https://travis-ci.org/daggerok/kafka)
 [Docker automated build](https://hub.docker.com/r/daggerok/kafka/) running [`daggerok/embedded-kafka`](https://github.com/daggerok/kafka) app
 
 - based on `openjdk:12-ea-12-jdk-alpine3.8` image
@@ -63,11 +63,13 @@ using: kafka 1.0.0
 *confluent*
 
 ```bash
+
 docker run --rm \
   -it --name kafka \
   -p 9092:9092 -p 2181:2181 \
   -e KAFKA_TOPICS=orders,invoices \
   daggerok/kafka:confluent-5.0.0
+
 ```
 
 *other images*
