@@ -9,16 +9,16 @@ using: kafka 1.0.0
 
 *confluent*
 
-- [`daggerok/kafka:confluent-3.3.0` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-3.3.0/Dockerfile)
-- [`daggerok/kafka:confluent-3.3.1` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-3.3.1/Dockerfile)
-- [`daggerok/kafka:confluent-3.3.2` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-3.3.1/Dockerfile)
-- [`daggerok/kafka:confluent-4.0.0` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-4.0.0/Dockerfile)
-- [`daggerok/kafka:confluent-4.0.1` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-4.0.1/Dockerfile)
-- [`daggerok/kafka:confluent-4.0.2` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-4.0.2/Dockerfile)
-- [`daggerok/kafka:confluent-4.1.0` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-4.1.0/Dockerfile)
-- [`daggerok/kafka:confluent-4.1.1` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-4.1.1/Dockerfile)
-- [`daggerok/kafka:confluent-4.1.2` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-4.1.2/Dockerfile)
-- [`daggerok/kafka:confluent-5.0.0` based on `openjdk:openjdk:8u171-jre-alpine3.8` image and `confluent-5.0.0 (scala 2.11)`](https://github.com/daggerok/kafka/blob/confluent-5.0.0/Dockerfile)
+- [`daggerok/kafka:confluent-5.0.0` based on `openjdk:8u171-jre-alpine3.8` image and `confluent-5.0.0`](https://github.com/daggerok/kafka/blob/confluent-5.0.0/Dockerfile)
+- [`daggerok/kafka:confluent-4.1.2` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-4.1.2`](https://github.com/daggerok/kafka/blob/confluent-4.1.2/Dockerfile)
+- [`daggerok/kafka:confluent-4.1.1` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-4.1.1`](https://github.com/daggerok/kafka/blob/confluent-4.1.1/Dockerfile)
+- [`daggerok/kafka:confluent-4.1.0` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-4.1.0`](https://github.com/daggerok/kafka/blob/confluent-4.1.0/Dockerfile)
+- [`daggerok/kafka:confluent-4.0.2` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-4.0.2`](https://github.com/daggerok/kafka/blob/confluent-4.0.2/Dockerfile)
+- [`daggerok/kafka:confluent-4.0.1` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-4.0.1`](https://github.com/daggerok/kafka/blob/confluent-4.0.1/Dockerfile)
+- [`daggerok/kafka:confluent-4.0.0` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-4.0.0`](https://github.com/daggerok/kafka/blob/confluent-4.0.0/Dockerfile)
+- [`daggerok/kafka:confluent-3.3.2` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.3.2`](https://github.com/daggerok/kafka/blob/confluent-3.3.1/Dockerfile)
+- [`daggerok/kafka:confluent-3.3.1` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.3.1`](https://github.com/daggerok/kafka/blob/confluent-3.3.1/Dockerfile)
+- [`daggerok/kafka:confluent-3.3.0` based on `openjdk:7u181-jre-alpine3.8` image and `confluent-3.3.0`](https://github.com/daggerok/kafka/blob/confluent-3.3.0/Dockerfile)
 
 *spring cloud kafka*
 
